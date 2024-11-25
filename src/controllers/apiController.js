@@ -1,20 +1,24 @@
 const verificar = (req, resp) => {
     try {
-        var tokenMeta = "chatbootwoquimeta";
+        console.log("Solicitud de verificación recibida:", req.query);
+        var tokenMeta = "chatbootwoquimeta"; //creado por mi
         var token = req.query["hub.verify_token"];
         var challenge = req.query["hub.challenge"];
 
         if (challenge != null && token != null && token == tokenMeta) {
-            resp.send(challenge);
+            console.log("Tokens coinciden, respondiendo challenge:", challenge);
+            resp.status(200).send(challenge); // Enviar challenge enviado por Meta como texto plano
         } else {
-            resp.status(400).send();
+            console.log("Tokens no coinciden o falta challenge/token.");
+            resp.status(400).send("Tokens no coinciden");
 
         }
         console.log(req);
 
     } catch (error) {
         //Le enviamos el status 400 para que Meta no este intentando verificar constantemente
-        resp.status(400).send();
+        console.error("Error al procesar la solicitud de verificación:", error);
+        resp.status(400).send("Error interno");
     }
 }
 
